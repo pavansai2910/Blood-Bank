@@ -25,6 +25,8 @@
     "eject": "react-scripts eject",
     "dev": "concurrently \"npm run start\" \"cd backend && npm run dev\"",
     "backend": "cd backend && npm start",
+    "render-build": "npm ci && npm run build",
+    "render-start": "npx serve -s build -l $PORT",
     "seed": "cd backend && node seed.js",
     "setup": "npm install && cd backend && npm install && npm run seed"
   },

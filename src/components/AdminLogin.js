@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { API } from "../api";
 import "./login.css";
 
 const AdminLogin = () => {
@@ -19,16 +20,10 @@ const AdminLogin = () => {
     try {
       // In a real application, this would be a proper API call
       // For now, we'll simulate a backend authentication
-      const response = await fetch("http://localhost:5050/api/auth/admin", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(loginData),
-      });
+      const response = await API.post("/auth/admin", loginData);
 
-      if (response.ok) {
-        const data = await response.json();
+      if (response.status >= 200 && response.status < 300) {
+        const data = response.data;
         localStorage.setItem("adminToken", data.token);
         localStorage.setItem("adminUser", loginData.username);
         navigate("/admin-dashboard");

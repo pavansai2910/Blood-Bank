@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import "./request.css";
 import defaultHospitalLogo from "./hackathon1.jpg";
 import axios from "axios";
+import { API } from "../api";
 
 function MainDashboard() {
   const [activeTab, setActiveTab] = useState("donors");
@@ -25,7 +26,7 @@ function MainDashboard() {
   const fetchDonors = async () => {
     setDonorsLoading(true);
     try {
-      const response = await axios.get("http://localhost:5050/api/donors");
+      const response = await API.get("/donors");
       setDonors(response.data);
     } catch (error) {
       console.error("Error fetching donors:", error);
@@ -37,7 +38,7 @@ function MainDashboard() {
   const fetchRecipients = async () => {
     setRecipientsLoading(true);
     try {
-      const response = await axios.get("http://localhost:5050/api/recipients");
+      const response = await API.get("/recipients");
       setRecipients(response.data);
     } catch (error) {
       console.error("Error fetching recipients:", error);
@@ -49,8 +50,8 @@ function MainDashboard() {
   const fetchBloodInventory = async () => {
     setBloodInventoryLoading(true);
     try {
-      const response = await axios.get(
-        "http://localhost:5050/api/bloodinventories"
+      const response = await API.get(
+        "/bloodinventories"
       );
       setBloodInventory(response.data);
     } catch (error) {
@@ -63,8 +64,8 @@ function MainDashboard() {
   const fetchNotifications = async () => {
     setNotificationsLoading(true);
     try {
-      const response = await axios.get(
-        "http://localhost:5050/api/notifications"
+      const response = await API.get(
+        "/notifications"
       );
       setNotifications(response.data);
     } catch (error) {

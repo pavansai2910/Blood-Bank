@@ -1,15 +1,15 @@
 import React, { useEffect, useState } from 'react';
 import './OrganTable.css'; // Import your styles here
+import { API } from '../api';
 
 const OrganTable = ({ organType, bloodGroup }) => {
   const [donors, setDonors] = useState([]);
   const [poppedRow, setPoppedRow] = useState(null); // To handle per-row pop animation
 
   useEffect(() => {
-    fetch('http://localhost:5000/donors')
-      .then((response) => response.json())
-      .then((data) => {
-        setDonors(data);
+    API.get('/donors')
+      .then((response) => {
+        setDonors(response.data);
       })
       .catch((error) => {
         console.error('Error fetching donors:', error);
@@ -40,15 +40,9 @@ const OrganTable = ({ organType, bloodGroup }) => {
       };
       
       // Send match request to backend
-      const response = await fetch('http://localhost:5050/api/matches', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(matchRequestData)
-      });
+      const response = await API.post('/matches', matchRequestData);
       
-      if (response.ok) {
+      if (response.status >= 200 && response.status < 300) {
         alert(`✅ Match request sent successfully for ${donor.name}!`);
       } else {
         alert(`❌ Failed to send match request for ${donor.name}`);

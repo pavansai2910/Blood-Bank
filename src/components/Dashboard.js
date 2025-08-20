@@ -17,6 +17,7 @@ import Registry from "./OrganRegistry";
 import MatchPage from "./MatchPage";
 import MainDashboard from "./MainDashboard";
 import axios from "axios";
+import { API } from "../api";
 
 ChartJS.register(
   ArcElement,
@@ -55,7 +56,7 @@ function Dashboard() {
   const fetchDonors = async () => {
     setDonorsLoading(true);
     try {
-      const response = await axios.get("http://localhost:5050/api/donors");
+      const response = await API.get("/donors");
       setDonors(response.data);
     } catch (error) {
       console.error("Error fetching donors:", error);
@@ -67,7 +68,7 @@ function Dashboard() {
   const fetchRecipients = async () => {
     setRecipientsLoading(true);
     try {
-      const response = await axios.get("http://localhost:5050/api/recipients");
+      const response = await API.get("/recipients");
       setRecipients(response.data);
     } catch (error) {
       console.error("Error fetching recipients:", error);
@@ -79,8 +80,8 @@ function Dashboard() {
   const fetchBloodInventory = async () => {
     setBloodInventoryLoading(true);
     try {
-      const response = await axios.get(
-        "http://localhost:5050/api/bloodinventories"
+      const response = await API.get(
+        "/bloodinventories"
       );
       setBloodInventory(response.data);
     } catch (error) {
@@ -93,8 +94,8 @@ function Dashboard() {
   const fetchNotifications = async () => {
     setNotificationsLoading(true);
     try {
-      const response = await axios.get(
-        "http://localhost:5050/api/notifications"
+      const response = await API.get(
+        "/notifications"
       );
       setNotifications(response.data);
     } catch (error) {
@@ -107,9 +108,9 @@ function Dashboard() {
   const fetchStats = async () => {
     try {
       const [donorsRes, recipientsRes, requestsRes] = await Promise.all([
-        axios.get("http://localhost:5050/api/donors"),
-        axios.get("http://localhost:5050/api/recipients"),
-        axios.get("http://localhost:5050/api/requests"),
+        API.get("/donors"),
+        API.get("/recipients"),
+        API.get("/requests"),
       ]);
 
       setStats({
@@ -206,15 +207,9 @@ function Dashboard() {
         organ: donor.donationType || 'Organ'
       };
       
-      const response = await fetch('http://localhost:5050/api/matches', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(matchRequestData)
-      });
+      const response = await API.post('/matches', matchRequestData);
       
-      if (response.ok) {
+      if (response.status >= 200 && response.status < 300) {
         alert(`✅ Match request sent successfully for ${donor.name}!`);
       } else {
         alert(`❌ Failed to send match request for ${donor.name}`);
@@ -234,15 +229,9 @@ function Dashboard() {
         organ: recipient.organNeeded || 'Organ'
       };
       
-      const response = await fetch('http://localhost:5050/api/matches', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(matchRequestData)
-      });
+      const response = await API.post('/matches', matchRequestData);
       
-      if (response.ok) {
+      if (response.status >= 200 && response.status < 300) {
         alert(`✅ Match request sent successfully for ${recipient.name}!`);
       } else {
         alert(`❌ Failed to send match request for ${recipient.name}`);

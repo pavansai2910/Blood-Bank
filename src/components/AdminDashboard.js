@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import "./dashboard.css";
 import axios from "axios";
+import { API } from "../api";
 
 const AdminDashboard = () => {
   const navigate = useNavigate();
@@ -68,7 +69,7 @@ const AdminDashboard = () => {
   const fetchDonors = async () => {
     setDonorsLoading(true);
     try {
-      const response = await axios.get("http://localhost:5050/api/donors");
+      const response = await API.get("/donors");
       setDonors(response.data);
     } catch (error) {
       console.error("Error fetching donors:", error);
@@ -80,7 +81,7 @@ const AdminDashboard = () => {
   const handleDonorFormSubmit = async (e) => {
     e.preventDefault();
     try {
-      await axios.post("http://localhost:5050/api/donors", donorForm);
+      await API.post("/donors", donorForm);
       setDonorForm({
         name: "",
         age: "",
@@ -113,7 +114,7 @@ const AdminDashboard = () => {
   const fetchRecipients = async () => {
     setRecipientsLoading(true);
     try {
-      const response = await axios.get("http://localhost:5050/api/recipients");
+      const response = await API.get("/recipients");
       setRecipients(response.data);
     } catch (error) {
       console.error("Error fetching recipients:", error);
@@ -125,7 +126,7 @@ const AdminDashboard = () => {
   const handleRecipientFormSubmit = async (e) => {
     e.preventDefault();
     try {
-      await axios.post("http://localhost:5050/api/recipients", recipientForm);
+      await API.post("/recipients", recipientForm);
       setRecipientForm({
         name: "",
         age: "",

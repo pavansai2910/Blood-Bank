@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
+import { API } from "../api";
 
 function Integration() {
   const [systems, setSystems] = useState([]);
@@ -24,7 +25,7 @@ function Integration() {
   useEffect(() => {
     const fetchSystems = async () => {
       try {
-        const res = await axios.get("http://localhost:5050/api/integration");
+        const res = await API.get("/integration");
         setSystems(res.data);
       } catch (error) {
         console.error("❌ Error fetching systems:", error);
@@ -37,8 +38,8 @@ function Integration() {
   useEffect(() => {
     const fetchBloodInventory = async () => {
       try {
-        const res = await axios.get(
-          "http://localhost:5050/api/bloodinventories"
+        const res = await API.get(
+          "/bloodinventories"
         );
         setBloodInventory(res.data);
       } catch (error) {
@@ -52,10 +53,10 @@ function Integration() {
     try {
       const endpoint =
         action === "Sync Now"
-          ? `http://localhost:5050/api/integration/sync/${id}`
-          : `http://localhost:5050/api/integration/retry/${id}`;
-      await axios.post(endpoint);
-      const res = await axios.get("http://localhost:5050/api/integration");
+          ? `/integration/sync/${id}`
+          : `/integration/retry/${id}`;
+      await API.post(endpoint);
+      const res = await API.get("/integration");
       setSystems(res.data);
     } catch (err) {
       console.error(`❌ Error performing ${action}:`, err);
@@ -97,8 +98,8 @@ function Integration() {
 
   const handleOpenInventoryModal = async (system) => {
     try {
-      const res = await axios.get(
-        `http://localhost:5050/api/bloodinventory/org/${system.orgId}`
+      const res = await API.get(
+        `/bloodinventory/org/${system.orgId}`
       );
       setSystemInventory(res.data);
       setModalSystem(system.name);
@@ -130,7 +131,7 @@ function Integration() {
         ...form,
         logs: form.logs ? form.logs.split(",").map((l) => l.trim()) : [],
       };
-      await axios.post("http://localhost:5050/api/integration/create", payload);
+      await API.post("/integration/create", payload);
       setFormSuccess("System added successfully!");
       setForm({
         name: "",
@@ -140,7 +141,7 @@ function Integration() {
         logs: "",
       });
       // Refresh systems list
-      const res = await axios.get("http://localhost:5050/api/integration");
+      const res = await API.get("/integration");
       setSystems(res.data);
     } catch (err) {
       setFormError("Error adding system.");
