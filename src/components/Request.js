@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
+import { API } from "../api";
 import "./request.css";
 
 function Request() {
@@ -30,7 +31,7 @@ function Request() {
   const fetchRequests = async () => {
     setRequestsLoading(true);
     try {
-      const response = await axios.get("http://localhost:5050/api/requests");
+      const response = await API.get("/requests");
       setRequests(response.data);
     } catch (error) {
       console.error("Error fetching requests:", error);
@@ -57,7 +58,7 @@ function Request() {
         location,
       };
 
-      await axios.post("http://localhost:5050/api/requests", newRequest);
+      await API.post("/requests", newRequest);
       setStatus("Sent!");
 
       // Refresh requests list
@@ -82,11 +83,11 @@ function Request() {
   const handleRequestAction = async (id, action) => {
     try {
       if (action === "Rejected") {
-        await axios.delete(`http://localhost:5050/api/requests/${id}`);
+        await API.delete(`/requests/${id}`);
         // Remove the request from local state
         setRequests(requests.filter((request) => request._id !== id));
       } else {
-        await axios.put(`http://localhost:5050/api/requests/${id}`, {
+        await API.put(`/requests/${id}`, {
           status: action,
         });
         // Update the request status in local state
@@ -126,7 +127,7 @@ function Request() {
         ...inventoryForm,
         quantity: Number(inventoryForm.quantity),
       };
-      await axios.post("http://localhost:5050/api/inventory/update", payload);
+      await API.post("/inventory/update", payload);
       setInventoryFormSuccess("Inventory added successfully!");
       setInventoryForm({ orgId: "", bloodGroup: "", quantity: "" });
       // Optionally refresh inventory list here if you display it

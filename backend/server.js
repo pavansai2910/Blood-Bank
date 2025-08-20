@@ -214,7 +214,21 @@ mongoose
   .catch((err) => console.error("❌ MongoDB connection error:", err));
 
 // Middleware
-app.use(cors({ origin: "http://localhost:3000", credentials: true }));
+app.set("trust proxy", 1);
+const allowedOriginsFromEnv = (process.env.CLIENT_ORIGIN || "").split(",").map((s) => s.trim()).filter(Boolean);
+app.use(
+  cors({
+    origin: function (origin, callback) {
+      if (!origin) return callback(null, true);
+      if (allowedOriginsFromEnv.length === 0 || allowedOriginsFromEnv.includes(origin)) {
+        return callback(null, true);
+      }
+      return callback(new Error("Not allowed by CORS"));
+    },
+    credentials: true,
+  })
+);
+app.options("*", cors());
 app.use(express.json());
 
 // API Routes

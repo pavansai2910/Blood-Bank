@@ -3,6 +3,7 @@ import { MapContainer, TileLayer, Marker, Popup, Circle } from "react-leaflet";
 import "leaflet/dist/leaflet.css";
 import L from "leaflet";
 import axios from "axios";
+import { API } from "../api";
 
 const DonorMap = ({ selectedCity }) => {
   const [donors, setDonors] = useState([]);
@@ -19,7 +20,7 @@ const DonorMap = ({ selectedCity }) => {
   useEffect(() => {
     const fetchDonors = async () => {
       try {
-        const response = await axios.get("http://localhost:5050/api/donors");
+        const response = await API.get("/donors");
         setDonors(response.data);
       } catch (error) {
         console.error("Error fetching donors:", error);

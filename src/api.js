@@ -1,9 +1,9 @@
 // src/api.js
 import axios from 'axios';
 
-const API = axios.create({
-  baseURL: 'http://localhost:5050/api',
-  withCredentials: true, 
+export const API = axios.create({
+  baseURL: process.env.REACT_APP_API_BASE_URL || 'http://localhost:5050/api',
+  withCredentials: true,
 });
 
 // // Login

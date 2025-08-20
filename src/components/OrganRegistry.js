@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import "bootstrap/dist/css/bootstrap.css";
 import axios from "axios";
+import { API } from "../api";
 
 function Registry() {
   const [view, setView] = useState("home");
@@ -28,7 +29,7 @@ function Registry() {
     setOrgFormError("");
     setOrgFormSuccess("");
     try {
-      await axios.post("http://localhost:5050/api/organisation/", orgForm);
+      await API.post("/auth/register", { ...orgForm, confirmPassword: orgForm.password });
       setOrgFormSuccess("Organisation added successfully!");
       setOrgForm({ name: "", id: "", email: "", password: "", location: "" });
       // Optionally refresh organisation list here if you display it
@@ -242,8 +243,8 @@ function RegistrationDonor({ setView }) {
     e.preventDefault();
 
     try {
-      const response = await axios.post(
-        "http://localhost:5050/api/donors",
+      const response = await API.post(
+        "/donors",
         formData
       );
 
@@ -640,7 +641,7 @@ function RegistrationRecipient({ setView }) {
 
   const sendOTP = async () => {
     try {
-      const response = await axios.post("http://localhost:5050/send-otp", {
+      const response = await API.post("/send-otp", {
         phone: formData.phone,
       });
 
@@ -660,8 +661,8 @@ function RegistrationRecipient({ setView }) {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await axios.post(
-        "http://localhost:5050/api/recipients",
+      const response = await API.post(
+        "/recipients",
         formData
       );
       if (response.status === 201) {
